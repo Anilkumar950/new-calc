@@ -16,14 +16,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 output application/json
 ---
 {
-	"results": attributes.queryParams.num1 - attributes.queryParams.num2
+	"results": attributes.queryParams.num1 + attributes.queryParams.num2
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<set-variable value="#[attributes.queryParams.num1]" doc:name="Set Variable" doc:id="ea3b8113-4292-4e63-a816-3b828c361707" variableName="num1"/>
 		<set-variable value="#[attributes.queryParams.num2]" doc:name="Set Variable" doc:id="461d4c25-47b5-4740-9190-ce697a4e760a" variableName="num2"/>
 		<choice doc:name="Choice" doc:id="45450877-5a93-4611-b636-074b32323d29" >
-			<when expression='#[vars.operations == "subtraction"]'>
+			<when expression='#[vars.operations == "addition"]'>
 				<logger level="INFO" doc:name="Logger" doc:id="20043f25-4e58-49ab-979c-5448a6e1b121" message="#[payload]"/>
 			</when>
 			<otherwise >
