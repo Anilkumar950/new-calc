@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="408de858-a84b-4955-b78c-1223ce8113ac" >
+		<http:listener-connection host="localhost" port="8084" />
+	</http:listener-config>
+	<flow name="new-calcFlow" doc:id="5a69e470-f215-4b61-b170-e10e34cbbfc4" >
+		<http:listener doc:name="Listener" doc:id="afd3880e-ca80-4909-9746-f5c50ca6c856" path="calc" config-ref="HTTP_Listener_config"/>
+		<ee:transform doc:name="Transform Message" doc:id="a58dab6b-38c6-47c5-acba-b60d40e36034" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"results": attributes.queryParams.number1 - attributes.queryParams.number2
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[attributes.queryParams.number1]" doc:name="Set Variable" doc:id="ea3b8113-4292-4e63-a816-3b828c361707" variableName="number1"/>
+		<set-variable value="#[attributes.queryParams.number2]" doc:name="Set Variable" doc:id="461d4c25-47b5-4740-9190-ce697a4e760a" variableName="number2"/>
+		<choice doc:name="Choice" doc:id="45450877-5a93-4611-b636-074b32323d29" >
+			<when expression='#[vars.operations == "subtraction"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="20043f25-4e58-49ab-979c-5448a6e1b121" message="#[payload]"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="f3742800-c6e3-4adf-80af-de340599c6be" message="default message"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
