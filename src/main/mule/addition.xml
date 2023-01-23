@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="additionFlow" doc:id="b5cd42e8-6f06-4efc-9487-dd852082b31a" >
+		<ee:transform doc:name="Transform Message" doc:id="84b85dec-2434-4d18-9082-0fd0bbd9c278">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"result": attributes.queryParams.num1 + attributes.queryParams.num2
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[attributes.queryParams.num1]" doc:name="Set Variable" doc:id="63732162-bdd3-4371-8c66-42714e2cd2a4" variableName="num1" />
+		<set-variable value="#[attributes.queryParams.num2]" doc:name="Set Variable" doc:id="d30430e0-d2a5-4b4b-b49a-07d969400cd1" variableName="num2" />
+		<choice doc:name="Choice" doc:id="d9c038d3-52ce-4766-a3c1-468aa778630b">
+			<when expression='#[vars.operations == "addition"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="a3a48c60-2b78-4698-beb3-71a3fbb22bbb" message="#[payload]" />
+			</when>
+			<otherwise>
+				<logger level="INFO" doc:name="Logger" doc:id="bad9bce2-30cd-44a0-b466-f3a3c838b431" message="default addution message" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

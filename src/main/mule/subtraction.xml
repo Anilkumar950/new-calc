@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="subtractionFlow" doc:id="7562fe17-4ab8-440f-9263-441be58c66b1" >
+		<ee:transform doc:name="Transform Message" doc:id="41542fcf-e30e-4fbb-b108-7462841d76c1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"result": attributes.queryParams.num1 - attributes.queryParams.num2
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[attributes.queryParams.num1]" doc:name="Set Variable" doc:id="58d18401-2203-4557-aff8-b5884f0a511d" variableName="num1"/>
+		<set-variable value="#[attributes.queryParams.num2]" doc:name="Set Variable" doc:id="1daaa309-79ec-47f0-b46e-9b161b8f4c22" variableName="num2"/>
+		<choice doc:name="Choice" doc:id="131c9eea-7515-4df9-b742-06b221f8d0de" >
+			<when expression='#[vars.operation == "subtraction"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="8d3eb281-f737-40e6-b281-604ce3b2763c" message="#[payload]"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="6b6d090d-7255-4865-9697-4f860ff3ee75" message="default"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
